@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>首页</title>
+		<link rel="stylesheet" href="css/home-css.css" />
+		<link rel="stylesheet" href="layui/css/layui.css">
+	</head>
+	<body>
+		<p id="p-islog" th:text="${session.islog}"></p>
+		<!--导航栏-->
+		<div id="div-navigation">
+			<ul class="layui-nav layui-bg-cyan" lay-filter="">
+				<li class="layui-nav-item layui-this" id="li-1"><a class="li-a" href="">首页</a></li>
+				<li class="layui-nav-item "><a class="li-a" href="">个人博客</a></li>
+				<li class="layui-nav-item "><a class="li-a" href="">给我留言</a></li>
+				<li class="layui-nav-item"><a class="li-a" href="">关于自己</a></li>
+				<li class="layui-nav-item"><a class="li-a" href="">精彩瞬间</a></li>
+				<li id="log" class="layui-nav-item">登陆/注册</li>
+				<li id="user-islog" class="layui-nav-item">
+				    <a href=""><img src="img/1.jpeg" class="layui-nav-img">我</a>
+				    <dl class="layui-nav-child">
+				      <dd><a href="javascript:;">修改信息</a></dd>
+				      <dd><a href="javascript:;">安全管理</a></dd>
+				      <dd><a href="javascript:;">退了</a></dd>
+				    </dl>
+	  			</li>
+			</ul>
+		</div>
+		<div id='div-Carousel'>
+			
+			<div id='div-Carousel01'>
+				<div class="layui-carousel" id="test1">
+				  	<div carousel-item>
+					    <div><img src="img/g8.jpg" /></div>
+					    <div><img src="img/1.jpeg" /></div>
+					    <div><img src="img/10.png" /></div>
+					    <div><img src="img/5.png" /></div>
+					    <div><img src="img/4.jpeg" /></div>
+					</div>
+				</div>
+			</div>
+			<div id='div-Carousel02'></div>
+			<div id='div-Carousel03'>
+				<div id='welcome'>
+					<span >欢迎来到黄大仙的博客~</span>
+				</div>
+				<div id="">
+					
+				</div>
+			</div>
+		</div>
+		
+		<div class="layui-row" style="width: 980px; margin: 0 auto;">
+		    <div class="layui-col-md9" id="div-content-left">
+		    	<div class="div-content-left-child" th:each="art:${session.article}">
+					<div class="div-left-child">
+
+					</div>
+
+					<div class="div-right-child" th:onclick="'test('+${art.getTid()}+')'">
+						<a id="Atitle" th:text="${art.title}" th:href="'/article?tid=' + ${art.getTid()}"></a>
+						<div class="article-text">
+							<p th:text="${art.content}"></p>
+						</div>
+						<div class="articlr-message">
+						作者：<span th:text="${art.author}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						日期：<span th:text="${art.date}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						分类：<span th:text="${art.type}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						阅读：<span th:text="${art.readcount}"></span>次&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<!--						点赞：<span th:text="${art.type}"></span>次&nbsp;&nbsp;&nbsp;&nbsp;-->
+						评论：<span th:text="${art.readcount}" ></span>条
+						</div>
+                    </div>
+		    	</div>
+		    </div>
+		    <div class="layui-col-md3" id="div-content-right">
+		    	<div class="div-content-right-child" th:each="art3:${session.articleTop3}">
+					<div>
+						<h2 th:text="${art3.title}"></h2>
+					</div>
+				</div>
+		    </div>
+		</div>
+
+	</body>
+	<script src="js/home.js"></script>
+	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js" ></script>	
+	<script type="text/javascript">
+		'use strict'
+		//判断是否登陆
+		function islogin(){
+			var key =$("#p-islog").text();
+			if (key=="true") {
+				$("#log").css("display","none");
+			}else{
+				$("#user-islog").click(function () {
+					alert("您还未登录,请先登录")
+					$.ajax({
+						url:"logandreg",
+						type:"post",
+						contentType: "application/json;charset=utf-8",
+						success:function () {
+							location.href="logandreg"
+						}
+					})
+				})
+			}
+		}
+		islogin();
+
+		$("#log").click(function () {
+			alert(11111)
+			$.ajax({
+				url:"logandreg",
+				type:"post",
+				contentType: "application/json;charset=utf-8",
+				success:function () {
+					location.href="logandreg"
+				}
+			})
+		})
+
+		//导航栏
+		layui.use('element', function(){
+			var element = layui.element;
+		});
+		
+		//轮播
+		layui.use('carousel', function(){
+		  	var carousel = layui.carousel;
+			  //建造实例
+			  carousel.render({
+			    elem: '#test1'
+			    ,width: '100%' //设置容器宽度
+			    ,height:'400px'//设置容器高度
+			    ,arrow: 'always' //始终显示箭头
+			    //,anim: 'updown' //切换动画方式
+			    ,anim: 'fade'
+			    ,indicator:'none'
+		  	});
+		});
+	</script>
+</html>

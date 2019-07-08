@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Sliding Forms Widget a Flat Responsive Widget Template</title>
+<!-- For-Mobile-Apps-and-Meta-Tags -->
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="keywords" content="" />
+	<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //For-Mobile-Apps-and-Meta-Tags -->
+
+<link href="css/style.css" type="text/css" rel="stylesheet" media="all">
+<link href="css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h1>欢迎。。</h1>
+<section>
+  <div class="controls w3l">
+    <div class="cbcontrol" id="cbControlRight"><<</div>
+    <div class="cbcontrol" id="cbControlLeft">>></div>
+   
+  </div>
+  <div class="stage" style="width: 1310px; margin: 0 auto;">
+   
+    <div class="cbImage w3">
+		<h3>找回密码</h3>
+		<form action="/reguser" method="post">
+			<input id="username-r" type="text" class="name" name="username" placeholder="Username" required="">
+			<input id="email_qq-r" type="text"  name="email" placeholder="Email：输入QQ邮箱" required="">
+			<input id="password-reg-r" type="password" class="password" name="password" placeholder="Password" required="">
+			<input id="password-qrmm-r" type="password" class="password-r" name="confirm password" placeholder="Confirm Password" required="">
+			<input id="sign-r" type="submit" value="Sign Up">
+		</form>
+	</div>
+    <div class="cbImage active signin agileits">
+		<h3>登陆..</h3>
+		<form action="/loguser" method="post">
+			<input id="username_L" type="text" name="username" class="name" placeholder="Username" required="">
+			<input id="password_L" type="password" name="password" class="password" placeholder="Password" required="">
+			<div id="v_container"></div>
+			<input type="text" id="code_input" value="" placeholder="请输入验证码"/><br />
+			<input type="checkbox" value="" id="rember-password"/>记住密码
+			<input id="log" type="submit" value="Sign In">
+			<!--<ul class="bottom">
+				<li><a href="#" class="forgot">Forgot Password?</a></li>
+				<li><a href="#" class="terms">Terms and Conditions</a></li>
+			</ul>-->
+		</form>
+	</div>
+    <div class="cbImage agileinfo">
+		<h3>注册..</h3>
+		<form action="/reguser" method="post">
+			<input id="username" type="text" class="name" name="username" placeholder="Username" required="">
+			<input id="password-reg-f" type="password" class="password" name="password" placeholder="Password" required="">
+			<input id="password-qrmm" type="password" class="password-r" name="confirm password" placeholder="Confirm Password" required="">
+			<input id="email_qq" type="text" class="email" name="email" placeholder="Email：输入QQ邮箱" required="">
+			<input type="text" class="check_code" name="check_code" placeholder="check_code" required="" >
+				<button id="check_code">获取验证码</button>
+			</input>
+			<input id="sign" type="submit" value="Sign Up">
+		</form>
+	</div>
+    <div class="clear"></div>
+  </div>
+  <div class="clear"></div>
+  <div class="footer">
+  <p>&copy; 黄大仙出品</p>
+  </div>
+</section>
+<script src="js/logandreg.js"></script>
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="coverflow-slideshow.js"></script>
+<script src="js/gVerify.js"></script>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+	<script>
+		'use strict'
+		$(function(){
+			var verifyCode = new GVerify("v_container");
+			//console.log(verifyCode)
+			document.getElementById("code_input").onblur = function(){
+				var res = verifyCode.validate(document.getElementById("code_input").value);
+				if(res){
+					//alert("验证正确");
+				}else{
+					document.getElementById("code_input").value="";
+					document.getElementById("code_input").placeholder="验证码输入有误！";
+					document.getElementById("code_input").focus()
+				}
+			}
+			//邮箱验证
+			var time=60;
+			$("#check_code").click(function daojishi(){
+				if(time>1){
+					time--;
+					var valu=time+"s"
+					$("#check_code").text(valu);
+					$("#check_code").attr("disabled",true)
+				}else{
+					$("#check_code").text("获取验证码");
+					$("#check_code").attr("disabled",false)
+				}
+				setTimeout(function(){daojishi()},1000)
+			})
+			//用户名不能为空
+			$(".name").change(function(){
+				var username = $(this).val().trim();
+				if(username==null||username==''||username==" "){
+					$(this).val(null);
+					$(this).attr("placeholder","用户名不能为空");
+					$(this).focus();
+				}
+			})
+
+			//校验密码：只能输入6-14个字母、数字、下划线
+			var Reg_password = /^(\w){6,14}$/;
+			$(".password").change(function(){
+				var password_in = $(this).val().trim();
+				if(Reg_password.test(password_in)!=true){
+					$(this).val(null);
+					$(this).attr("placeholder","密码格式：6-14位字母、数字、下划线");
+					$(this).focus();
+				}
+			})
+
+			//确认密码(注册)：
+			$("#password-qrmm").change(function(){
+				var password_in = $("#password-reg-f").val().trim();
+				var password_qr = $("#password-qrmm").val().trim();
+
+				if(password_qr!=password_in){
+					$("#password-qrmm").val(null);
+					$("#password-qrmm").attr("placeholder","前后输入密码不一致！！");
+					$("#password-qrmm").focus();
+				}
+			})
+			//确认密码(找回密码)：
+			$("#password-qrmm-r").change(function(){
+				var password_in = $("#password-reg-r").val().trim();
+				var password_qr = $("#password-qrmm-r").val().trim();
+
+				if(password_qr!=password_in){
+					$("#password-qrmm-r").val(null);
+					$("#password-qrmm-r").attr("placeholder","前后输入密码不一致！！");
+					$("#password-qrmm-r").focus();
+				}
+			})
+
+			//邮箱格式验证：输入qq邮箱，完成验证
+			var Reg_emali = /^[1-9]\d{7,10}@qq\.com$/;
+			$("#email_qq").change(function(){
+				var email_qq = $("#email_qq").val().trim();
+				if(Reg_emali.test(email_qq)!=true){
+					$("#email_qq").val(null);
+					$("#email_qq").attr("placeholder","邮箱格式有误，请输入QQ邮箱！");
+					$("#email_qq").focus();
+				}
+			})
+
+			//注册
+			$("#sign").click(function () {
+				var Users={
+					username:$("#username").val(),
+					password:$("#password-reg-f").val(),
+					email:$("#email_qq").val()
+				};
+				$.ajax({
+					contentType: "application/json;charset=utf-8",
+					data: Users
+					// success:function (islog) {
+					// 	if (islog==true) {
+					// 		console.log(1111111)
+					// 	}
+					// }
+				})
+			})
+
+			//记住密码
+			$(function(){
+				$("#rember-password").click(function(){
+					var a = $("#rember-password").prop('checked');
+					var password = $("#password_L").val()
+					//创建cookie
+					if(a==true){
+						$.cookie('pwd',password,{
+							expires:7,
+						});
+						$.cookie('in2','true',{
+							expires: 7,
+						});
+					}
+				})
+			})
+			$(function(){
+				if($.cookie('in2')){
+					$("#rember-password").attr("checked", true);
+					//获取cookie
+					$("#password_L").val($.cookie('pwd'));
+				}
+			})
+
+			//登陆
+			$("#log").click(function () {
+				$.ajax({
+					// contentType: "application/json;charset=utf-8",
+					data:{
+						username:$("#username_L").val(),
+						password:$("#password_L").val(),
+					},
+				})
+			})
+
+
+
+			//邮箱正确性验证(找回密码)：
+
+
+
+		})
+
+
+
+
+	</script>
+</body>
+</html>

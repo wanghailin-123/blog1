@@ -1,0 +1,19 @@
+body{
+	margin: 0px;
+	padding: 1px;
+}
+#div-navigation{
+	text-align: center;
+}
+#redact{
+	display: none;
+}
+#user-islog{
+	display: none;
+}
+#p-islog{
+	display: none;
+}
+#log{
+	display:initial;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title th:text="${article.getTitle()}"></title>
+        <link rel="stylesheet" href="css/article.css" />
+    </head>
+    <body>
+        <div id="div-outer">
+            <div >
+                <h2 th:text="${article.getTitle()}">标题</h2>
+            </div>
+            <div id="article-content">
+                <p th:utext="${article.getContent()}">内容</p>
+            </div>
+            <div>
+                作者：<span th:text="${article.author}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                日期：<span th:text="${article.date}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                分类：<span th:text="${article.type}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                阅读：<span th:text="${article.readcount}"></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div id="comment" style="display: inline">评论：<span th:text="${article.commentcount}" ></span>条</div>
+            </div>
+            <div id="comment_input" style="display: none">
+            <textarea id="article-comment">
+
+			</textarea>
+                <button id="submit">提交评论</button>
+            </div>
+
+            <div th:each="comm:${session.comment}">
+                <p>
+                    <span th:text="${comm.commentator}"></span><span>:</span><span th:text="${comm.content}"></span>
+                </p>
+            </div>
+        </div>
+
+    </body>
+
+    <script type="text/javascript" src="js/jquery-2.1.4.min.js" ></script>
+    <script type="text/javascript">
+        'use strict'
+        $(function () {
+            //点击显示评论框
+            $("#comment").click(function () {
+                $("#comment_input").css("display","initial");
+            })
+            //点击提交评论
+            $("#submit").click(function () {
+
+                $.ajax({
+                    url:"comment",
+                    type:"post",
+                    data: {"content":$("#article-comment").val()},
+                    //contentType: "application/json;charset=utf-8",
+                    success:function (data) {
+                        if (data) {
+                            alert("评论成功。")
+                        }else{
+                            alert("评论时发生了不知名的错误。")
+                        }
+                    }
+                })
+                $("#comment_input").css("display","none");
+            })
+        })
+
+    </script>
+</html>

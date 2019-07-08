@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>Message Board</title>
+		<link rel="stylesheet" href="css/messageboard.css" />
+	</head>
+	<body>
+		<!--留言板logo-->
+		<div id="div-logo">
+			<img src="img/3.jpg" />
+			<div id="div-logo-center"></div>
+			<div id="div-logo-top">来都来了，不留点什么就走么？
+				<span>留言总数：</span><span th:text="${MsgList.size()}"></span><span>条</span>
+			</div>
+		</div>
+		<!--留言的功能区-->
+		<div id="div-function">
+			<button id="butt01">留言</button>
+			<button id="butt02">升序(时间)</button>
+			<button id="butt03">降序(时间)</button>
+		</div>
+		<div id="write">
+			<textarea id="wtite-message">
+			
+			</textarea>
+			<button id="output">提交</button>
+		</div>
+		
+		<!--留言板内容-->
+		<div id="div-body" th:each="mesg:${MsgList}">
+			<div id="div-body-child" >
+				<span th:text="${mesg.messagedate}"></span><br>
+				<span th:text="${mesg.writer}"></span>
+				<span>给你留言：</span><br>
+				<span th:text="${mesg.messagecontext}"></span>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript">
+		'use strict'
+		$(function(){
+			$("#butt01").click(function(){
+				$("#write").css("display","initial")
+			})
+			$("#output").click(function () {
+				$.ajax({
+					url:"addMes",
+					type:"post",
+					data: {
+						"messagecontent":$("#wtite-message").val()
+					},
+					//contentType: "application/json;charset=utf-8",
+					success:function (data) {
+						if (data) {
+							alert("留言成功。")
+							location.href="mes"
+						}else{
+							alert("留言时发生了不知名的错误。")
+						}
+					}
+				})
+			})
+			$("#butt02").click(function () {
+				$.ajax({
+					url:"mes",
+					type:"post",
+					success:function () {
+						location.href="mes"
+					}
+				})
+			})
+			$("#butt03").click(function () {
+				$.ajax({
+					url:"mesDesc",
+					type:"post",
+					success:function () {
+							location.href="mesDesc"
+					}
+				})
+			})
+		})
+	</script>
+</html>
+

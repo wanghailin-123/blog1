@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="UTF-8">
+		<title>个人博客</title>
+		<link rel="stylesheet" href="css/personal_blog.css" />
+		<link rel="stylesheet" href="layui/css/layui.css">
+	</head>
+	<body>
+		<p id="p-islog" th:text="${session.islog}"></p>
+		<!--导航栏-->
+		<div id="div-navigation">
+			<ul class="layui-nav layui-bg-cyan" lay-filter="">
+				<li class="layui-nav-item " id="li-1"><a class="li-a" href="">首页</a></li>
+				<li class="layui-nav-item layui-this"><a class="li-a" href="">发表博客</a></li>
+				<li class="layui-nav-item "><a class="li-a" href="">给我留言</a></li>
+				<li class="layui-nav-item"><a class="li-a" href="">关于自己</a></li>
+				<li class="layui-nav-item"><a class="li-a" href="">精彩瞬间</a></li>
+				<li  id="log" class="layui-nav-item"><a class="li-a" href="">登陆/注册</a></li>
+				<li id="user-islog" class="layui-nav-item">
+				    <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
+				    <dl class="layui-nav-child">
+				      <dd><a href="javascript:;">修改信息</a></dd>
+				      <dd><a href="javascript:;">安全管理</a></dd>
+				      <dd><a href="javascript:;">退了</a></dd>
+				    </dl>
+	  			</li>
+			</ul>
+		</div>
+		<div  class="layui-row" style="width: 980px; margin: 0 auto;">
+			<div>
+				<button id="addarticle" class="layui-btn layui-btn-sm">发表文章</button>
+			</div>
+			
+			
+			
+			<form id="redact" action="/add" method="post">
+				<div class="layui-form-item">
+	    			<label class="layui-form-label">文章标题</label>
+	    			<div class="layui-input-block">
+	      				<input id="title" type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+	    			</div>
+
+					<label class="layui-form-label">文章分类</label>
+					<div class="layui-input-block" >
+						<select id="type" name="city" lay-verify="required" style="width: 110px;height:25px;margin-top: 5px;text-align: center">
+							<option value="0">文学</option>
+							<option value="1">科技</option>
+							<option value="2">随笔</option>
+							<option value="3">鸡汤</option>
+							<option value="4">砒霜</option>
+						</select>
+					</div>
+
+	  			</div>
+				<textarea class="article-content"  id="demo" style="display: none;"></textarea>
+
+				<button id="addArticle_L"  name="content" class="layui-btn layui-btn-sm">发表文章</button>
+
+			</form>
+		</div>
+	</body>
+	<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" src="js/jquery-2.1.4.min.js" ></script>
+	<script type="text/javascript">
+		'use strict'
+		$(function(){
+			//判断是否登陆
+			function islogin(){
+				var key =$("#p-islog").text();
+				if (key=="true") {
+					$("#log").css("display","none");
+				}else{
+					$("#user-islog").click(function () {
+						alert("您还未登录,请先登录")
+						$.ajax({
+							url:"logandreg",
+							type:"post",
+							contentType: "application/json;charset=utf-8",
+							success:function () {
+								location.href="logandreg"
+							}
+						})
+					})
+				}
+			}
+			islogin();
+
+			$("#log").click(function () {
+				alert(11111)
+				$.ajax({
+					url:"logandreg",
+					type:"post",
+					contentType: "application/json;charset=utf-8",
+					success:function () {
+						location.href="logandreg"
+					}
+				})
+			})
+			//导航栏
+			layui.use('element', function(){
+				var element = layui.element;
+			});
+			//富文本编辑器
+			layui.use('layedit', function(){
+				var layedit = layui.layedit;
+				var aa=layedit.build('demo');//建立编辑器
+				$("#addArticle_L").click(function(){
+					var tet=layedit.getContent(aa)
+					var articles={
+						title:$("#title").val(),
+						content:tet,
+						type:$("#type option:selected").text()
+					};
+					$.ajax({
+						contentType: "application/json;charset=utf-8",
+						data: articles,
+						success:function () {
+							//layer.msg(data)
+						}
+					})
+					$("#redact").css("display","none");
+				})
+			});
+		})
+
+	</script>
+	<script>
+		$("#addarticle").click(function(){
+			$("#redact").css("display","initial");
+		})
+	</script>
+</html>
